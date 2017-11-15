@@ -1,0 +1,12 @@
+<html>
+	<body>
+		<h1>{{thoughtpod.pod_title}}</h1>
+		{% for i in items %}
+			<div>
+				<p>{{i.title}}</p>
+				<p>{{i.url}}</p>
+				<p>{{i.description}}</p>
+			</div>
+		{% endfor %}
+	</body>
+</html>

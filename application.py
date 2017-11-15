@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, ThoughtPod, PodItem
@@ -13,7 +13,6 @@ session = DBSession()
 
 
 @app.route('/')
-@app.route('/hello')
 def HelloWorld():
     return "Hello World"
 
@@ -21,18 +20,7 @@ def HelloWorld():
 def podList(pod_id):
     thoughtpod = session.query(ThoughtPod).filter_by(id=pod_id).one()
     items = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id)
-    output = '<h1>'
-    output += thoughtpod.pod_title
-    output += '</h1><br>'
-    for i in items:
-        output += i.title
-        output += '</br>'
-        output += i.url
-        output += '</br>'
-        output += i.description
-        output += '</br>'
-        output += '</br>'
-    return output
+    return render_template('podlist.html', thoughtpod=thoughtpod, items=items)
 
 if __name__ == '__main__':
     app.debug = True
