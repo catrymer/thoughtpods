@@ -6,6 +6,9 @@
 				<p>{{i.title}}</p>
 				<p>{{i.url}}</p>
 				<p>{{i.description}}</p>
+				<a href='{{url_for('editPodListItem', pod_id = thoughtpod.id, item_id = i.id) }}'>Edit</a>
+				</br>
+				<a href = '{{url_for('deletePodListItem', pod_id = thoughtpod.id, item_id = i.id ) }}'>Delete</a>
 			</div>
 		{% endfor %}
 	</body>

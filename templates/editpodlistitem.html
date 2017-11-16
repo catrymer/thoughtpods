@@ -1,0 +1,45 @@
+<html>
+	<body>
+		<h1> Edit Recommendation </h1>
+			<form action="{{ url_for('editPodListItem', pod_id=pod_id, item_id=item.id)}}" method = 'post'>
+			<dl>
+				<dt>Title:</dt>
+				<dd><input type ='text' size='30' name='title' placeholder = '{{item.title }}'></dd>
+				<dt>URL:</dt>
+				<dd><input type ='text' size='30' name='url' placeholder = '{{item.url}}'></dd>
+				<dt>Description:</dt>
+				<dd><textarea name = 'description' rows='5' cols='40' placeholder = '{{item.description }}'></textarea></dd>
+				<dt>Time Investment:</dt>
+				<dd><input type ='text' size='30' name='time_investment' placeholder = '{{item.time_investment}}'></dd>
+				<dt>Difficulty Level:</dt>
+					{% if item.difficulty_level == 1 %}
+						<dd><input type ='radio' name='difficulty_level' value='1' checked >1</dd>
+					{%else%}
+						<dd><input type ='radio' name='difficulty_level' value='1'>1</dd>
+    					{% endif %}
+					{% if item.difficulty_level == 2 %}
+						<dd><input type ='radio' name='difficulty_level' value='2' checked >2</dd>
+					{%else%}
+						<dd><input type ='radio' name='difficulty_level' value='2'>2</dd>
+					{% endif %}
+                                        {% if item.difficulty_level == 3 %}
+                                                <dd><input type ='radio' name='difficulty_level' value='3' checked >3</dd>
+                                        {%else%}
+                                                <dd><input type ='radio' name='difficulty_level' value='3'>3</dd>
+                                        {% endif %}
+                                        {% if item.difficulty_level == 4 %}
+                                                <dd><input type ='radio' name='difficulty_level' value='4' checked >4</dd>
+                                        {%else%}
+                                                <dd><input type ='radio' name='difficulty_level' value='4'>4</dd>
+                                        {% endif %}
+                                        {% if item.difficulty_level == 5 %}
+                                                <dd><input type ='radio' name='difficulty_level' value='5' checked >5</dd>
+                                        {%else%}
+                                                <dd><input type ='radio' name='difficulty_level' value='5'>5</dd>
+                                        {% endif %}
+			</dl>
+				<input type='submit' value='Edit'>
+			</form>
+			<a href = '{{url_for('podList', pod_id = pod_id)}}'> Cancel </a>
+	</body>
+</html>
