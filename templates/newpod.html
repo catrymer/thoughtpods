@@ -1,0 +1,14 @@
+<html>
+        <body>
+                <h1>Create a New ThoughtPod </h1>
+                <form action="{{url_for('newThoughtPod')}}" method = 'POST'>
+                        <dl>
+                                <dt>Title:</dt>
+                                        <dd><input type ='text' size='30' name='title'></dd>
+                                <dt>Description:</dt>
+                                        <dd><textarea name = 'description' rows='5' cols='40'></textarea></dd>
+			</dl>
+			<input type='submit' value='Add'>
+		</form>
+	</body>
+</html>

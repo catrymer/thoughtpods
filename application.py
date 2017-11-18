@@ -13,7 +13,8 @@ session = DBSession()
 
 
 @app.route('/')
-def HelloWorld():
+@app.route('/pods/')
+def Home():
     allpods = session.query(ThoughtPod)
     return render_template('index.html', allpods=allpods)
 
@@ -23,6 +24,17 @@ def podList(pod_id):
     thoughtpod = session.query(ThoughtPod).filter_by(id=pod_id).one()
     items = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id)
     return render_template('podlist.html', thoughtpod=thoughtpod, items=items)
+
+
+@app.route('/pods/new/', methods=['GET', 'POST'])
+def newThoughtPod():
+    if request.method == 'POST':
+        newPod = ThoughtPod(pod_title=request.form['title'], description=request.form['description'])
+        session.add(newPod)
+        session.commit()
+        return redirect(url_for('Home'))
+    else:
+        return render_template('newpod.html')
 
 
 @app.route('/pods/<int:pod_id>/new/', methods=['GET', 'POST'])
