@@ -28,7 +28,9 @@ def podList(pod_id):
 def newPodListItem(pod_id):
     if request.method == 'POST':
         newItem = PodItem(
-            title=request.form['title'], thought_pod_id=pod_id)
+            title=request.form['title'], url=request.form['url'],
+            description=request.form['description'], time_investment=request.form['time_investment'],
+            difficulty_level=request.form['difficulty_level'], thought_pod_id=pod_id)
         session.add(newItem)
         session.commit()
         return redirect(url_for('podList', pod_id=pod_id))

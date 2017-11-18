@@ -2,9 +2,23 @@
 	<body>
 		<h1> New PodList Item </h1>
 		<form action="{{url_for('newPodListItem', pod_id=pod_id )}}" method = 'POST'>
-			<p>Title:</p>
-			<input type='text' size='30' name='title'>
-			<input type='submit' value='Create'>
+                        <dl>
+                                <dt>Title:</dt>
+					<dd><input type ='text' size='30' name='title'></dd>
+                                <dt>URL:</dt>
+					<dd><input type ='text' size='30' name='url'></dd>
+                                <dt>Description:</dt>
+					<dd><textarea name = 'description' rows='5' cols='40'></textarea></dd>
+                                <dt>Time Investment:</dt>
+					<dd><input type ='text' size='30' name='time_investment'></dd>
+                                <dt>Difficulty Level:</dt>
+					<dd><input type ='radio' name='difficulty_level' value='1'>1</dd>
+					<dd><input type ='radio' name='difficulty_level' value='2'>2</dd>
+					<dd><input type ='radio' name='difficulty_level' value='3'>3</dd>
+					<dd><input type ='radio' name='difficulty_level' value='4'>4</dd>
+					<dd><input type ='radio' name='difficulty_level' value='5'>5</dd>
+                        </dl>
+                        <input type='submit' value='Add'>
 		</form>
 	</body>
 </html>
