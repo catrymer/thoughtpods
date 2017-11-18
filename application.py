@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, ThoughtPod, PodItem
@@ -81,6 +81,26 @@ def deletePodListItem(pod_id, item_id):
         return redirect(url_for('podList', pod_id=pod_id))
     else:
         return render_template('deletepodlistitem.html', item=itemToDelete)
+
+
+# Add JSON endpoints
+@app.route('/pods/JSON/')
+def thoughtPodJSON():
+    thoughtPods = session.query(ThoughtPod).all()
+    return jsonify(thoughtPods=[i.serialize for i in thoughtPods])
+
+
+@app.route('/pods/<int:pod_id>/JSON/')
+def thoughtPodListJSON(pod_id):
+    thoughtpod = session.query(ThoughtPod).filter_by(id=pod_id).one()
+    allPodItems = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id).all()
+    return jsonify(allPodItems=[i.serialize for i in allPodItems])
+
+
+@app.route('/pods/<int:pod_id>/<int:item_id>/JSON/')
+def podListItemJSON(pod_id, item_id):
+    onePodItem = session.query(PodItem).filter_by(id=item_id).one()
+    return jsonify(onePodItem=onePodItem.serialize)
 
 
 if __name__ == '__main__':
