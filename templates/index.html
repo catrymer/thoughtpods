@@ -1,0 +1,11 @@
+<html>
+	<body>
+		<h1>ThoughtPods</h1>
+		<div>
+			{% for pod in allpods %}
+				<a href='{{url_for('podList', pod_id = pod.id) }}'>{{pod.pod_title}}</a>
+				<p>{{pod.description}}</p>
+			{% endfor %}
+		</div>
+	</body>
+</html>

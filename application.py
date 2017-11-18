@@ -14,7 +14,8 @@ session = DBSession()
 
 @app.route('/')
 def HelloWorld():
-    return "Hello World"
+    allpods = session.query(ThoughtPod)
+    return render_template('index.html', allpods=allpods)
 
 
 @app.route('/pods/<int:pod_id>/')
