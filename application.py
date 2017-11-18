@@ -59,9 +59,15 @@ def editPodListItem(pod_id, item_id):
             'editpodlistitem.html', pod_id=pod_id, item_id=item_id, item=editedItem)
 
 
-@app.route('/pods/<int:pod_id>/<int:item_id>/delete/')
+@app.route('/pods/<int:pod_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
 def deletePodListItem(pod_id, item_id):
-    return "page to delete an existing PodList item"
+    itemToDelete = session.query(PodItem).filter_by(id=item_id).one()
+    if request.method == 'POST':
+        session.delete(itemToDelete)
+        session.commit()
+        return redirect(url_for('podList', pod_id=pod_id))
+    else:
+        return render_template('deletepodlistitem.html', item=itemToDelete)
 
 
 if __name__ == '__main__':
