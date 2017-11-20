@@ -129,6 +129,38 @@ def gconnect():
     return output
 
 
+# Log out functionality
+@app.route('/gdisconnect/')
+def gdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        print 'Access Token is None'
+        response = make_response(json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    print 'In gdisconnect access token is %s' % access_token
+    print 'User name is: '
+    print login_session['username']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    print 'result is '
+    print result
+    if result['status'] == '200':
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+
 # Returns a list of the items in a ThoughtPod List
 @app.route('/pods/<int:pod_id>/')
 def podList(pod_id):
@@ -140,6 +172,8 @@ def podList(pod_id):
 # Functionality to create a new ThoughtPod
 @app.route('/pods/new/', methods=['GET', 'POST'])
 def newThoughtPod():
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         newPod = ThoughtPod(pod_title=request.form['title'], description=request.form['description'])
         session.add(newPod)
@@ -152,6 +186,8 @@ def newThoughtPod():
 # Functionality to add a new item to an existing ThoughtPod List
 @app.route('/pods/<int:pod_id>/new/', methods=['GET', 'POST'])
 def newPodListItem(pod_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         newItem = PodItem(
             title=request.form['title'], url=request.form['url'],
@@ -167,6 +203,8 @@ def newPodListItem(pod_id):
 # Functionality to edit individual items on the ThoughtPod Lists
 @app.route('/pods/<int:pod_id>/<int:item_id>/edit/', methods=['GET', 'POST'])
 def editPodListItem(pod_id, item_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     editedItem = session.query(PodItem).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['title']:
@@ -190,6 +228,8 @@ def editPodListItem(pod_id, item_id):
 # Functionality to delete individual items from the ThoughtPod Lists
 @app.route('/pods/<int:pod_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
 def deletePodListItem(pod_id, item_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     itemToDelete = session.query(PodItem).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(itemToDelete)
