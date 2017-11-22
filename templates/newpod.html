@@ -1,6 +1,7 @@
-<html>
-        <body>
-                <h1>Create a New ThoughtPod </h1>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+                <h2>Create a New ThoughtPod </h2>
                 <form action="{{url_for('newThoughtPod')}}" method = 'POST'>
                         <dl>
                                 <dt>Title:</dt>
@@ -8,7 +9,7 @@
                                 <dt>Description:</dt>
                                         <dd><textarea name = 'description' rows='5' cols='40'></textarea></dd>
 			</dl>
-			<input type='submit' value='Add'>
+			<input class="button" type='submit' value='Add'>
+			<a class="button" href = '{{url_for('Home')}}'> Cancel </a>
 		</form>
-	</body>
-</html>
+{% endblock %}

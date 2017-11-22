@@ -1,15 +1,16 @@
-<html>
-	<body>
-		<h1>{{thoughtpod.pod_title}}</h1>
-		{% for i in items %}
-			<div>
-				<p>{{i.title}}</p>
-				<p>{{i.url}}</p>
-				<p>{{i.description}}</p>
-				<a href='{{url_for('editPodListItem', pod_id = thoughtpod.id, item_id = i.id) }}'>Edit</a>
-				</br>
-				<a href = '{{url_for('deletePodListItem', pod_id = thoughtpod.id, item_id = i.id ) }}'>Delete</a>
-			</div>
-		{% endfor %}
-	</body>
-</html>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+	<h2>{{thoughtpod.pod_title}}</h2>
+	<a class="new" href='{{url_for('newPodListItem', pod_id = thoughtpod.id) }}'>+ Add New Item</a>
+	{% for i in items %}
+		<div class="podlist_item">
+			<p>
+				<a href='{{i.url}}'>{{i.title}}</a><br>
+				{{i.description}}
+			</p>
+			<div class="edit"><a class="button" href='{{url_for('editPodListItem', pod_id = thoughtpod.id, item_id = i.id) }}'>Edit</a></div>
+			<div class="delete"><a class="button" href='{{url_for('deletePodListItem', pod_id = thoughtpod.id, item_id = i.id ) }}'>Delete</a></div>
+		</div>
+	{% endfor %}
+{% endblock %}

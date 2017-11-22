@@ -1,0 +1,172 @@
+body {
+	color: purple;
+	margin: 1em;
+	font-family: Lucida Console, Courier, monospace;
+	background-color: whitesmoke;
+}
+
+header {
+	background-color: yellow;
+	padding: .5%;
+	margin-bottom: 1em;
+}
+
+h1 {
+	text-transform: uppercase;
+	font-size: 2.5em;
+	font-weight: normal;
+	margin-bottom: 2px; 
+	display: inline;
+}
+
+h2 {
+	text-transform: uppercase;
+	font-size: 2em;
+	font-weight: normal;
+	color: pink;
+}
+
+h3 {
+	text-transform: uppercase;
+	font-weight: normal;
+	font-size: 1.5em;
+}
+
+h4 {
+	font-size: 1em;
+	font-weight: normal;
+	margin: .5em;
+}
+
+h5 {
+	text-align: right;
+	text-transform: uppercase;
+	font-size: 1em;
+	margin: 0.5em;
+}
+
+a {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a h1 {
+	color: purple;
+}
+
+form {
+	background-color: pink;
+	padding: 1em;
+}
+
+.allpods {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.newpod {
+	background-color: gray;
+	margin: 1em .5em 0 .5em;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.newpod:hover {
+	background-color: yellow;
+}
+
+.newpod:hover a {
+	color: purple;
+}
+
+.onepod {
+	overflow-wrap: break-word;
+	background-color: pink;
+	padding: .5%;
+	margin: 1em .5em 0 .5em;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.onepod:hover {
+	background-color: yellow;
+}
+
+.onepod:hover a {
+	color: purple;
+}
+
+.user {
+	width: auto;
+	vertical-align: top;
+	float: right;
+	margin: 0;
+	max-height: 4em;
+}
+
+.podlist_item {
+	border-top: 4px solid pink;
+	padding: 1em;
+	display: flex;
+        flex-wrap: wrap;
+	clear: both;
+}
+
+.podlist_item a, .new a {
+	color: purple;
+}
+
+.podlist_item p {
+	min-width: 100%;
+}
+
+.button {
+	background-color: yellow;
+	padding: .8em;
+	font-size: 1em;
+	border: none;
+	font-family: Lucida Console, Courier, monospace;
+	font-weight: bold;
+	margin: 0 .5em 0 0;
+}
+
+a.button, input.button {
+	text-transform: uppercase;
+	color: purple;
+}
+
+a.new {
+	color: purple;
+}
+
+.edit, .delete, {
+	margin: 1em 1em 1em 0;
+}
+
+.new {
+	float: right;
+}
+
+@media screen and (min-width: 650px) {
+	.onepod, .newpod { width: calc( (100% / 3 ) - 1em ); }
+	h1 { font-size: 4em; }
+	.podlist_item p {
+		min-width: 65%;
+		max-width: 80%;
+	}
+}
+
+@media screen and (min-width: 970px) {
+	body { 
+		width: 80%; 
+		margin: 5% auto;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	h1 { font-size: 2em; }
+}

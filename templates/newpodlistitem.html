@@ -1,5 +1,6 @@
-<html>
-	<body>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
 		<h1> New PodList Item </h1>
 		<form action="{{url_for('newPodListItem', pod_id=pod_id )}}" method = 'POST'>
                         <dl>
@@ -18,7 +19,7 @@
 					<dd><input type ='radio' name='difficulty_level' value='4'>4</dd>
 					<dd><input type ='radio' name='difficulty_level' value='5'>5</dd>
                         </dl>
-                        <input type='submit' value='Add'>
+                        <input class="button" type='submit' value='Add'>
+			<a class="button" href = '{{url_for('podList', pod_id = pod_id)}}'> Cancel </a>
 		</form>
-	</body>
-</html>
+{% endblock %}

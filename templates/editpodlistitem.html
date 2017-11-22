@@ -1,6 +1,7 @@
-<html>
-	<body>
-		<h1> Edit Recommendation </h1>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+		<h2> Edit Recommendation </h2>
 			<form action="{{ url_for('editPodListItem', pod_id=pod_id, item_id=item.id)}}" method = 'post'>
 			<dl>
 				<dt>Title:</dt>
@@ -38,8 +39,7 @@
                                                 <dd><input type ='radio' name='difficulty_level' value='5'>5</dd>
                                         {% endif %}
 			</dl>
-				<input type='submit' value='Edit'>
+				<input class="button" type='submit' value='Edit'>
+				<a class="button" href = '{{url_for('podList', pod_id = pod_id)}}'> Cancel </a>
 			</form>
-			<a href = '{{url_for('podList', pod_id = pod_id)}}'> Cancel </a>
-	</body>
-</html>
+{% endblock %}
