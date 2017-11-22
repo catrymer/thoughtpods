@@ -1,6 +1,10 @@
 <header>
 	<a href='{{url_for('Home')}}'><h1>ThoughtPods</h1></a>
 	<div class="user">
-		{% include "login.html" %}
+		{%if 'username' not in session %}
+			<a href="{{url_for('showLogin')}}">Login</a>
+		{% else %}
+			<a href="{{url_for('gdisconnect')}}">Logout</a>
+		{% endif %}
 	</div>
 </header>

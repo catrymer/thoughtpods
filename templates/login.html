@@ -2,6 +2,11 @@
 <html>
 <head>
 
+	<title>ThoughtPods</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta charset="utf-8">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+
 <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"> </script>
 	<script src="//apis.google.com/js/platform.js?onload=start"> </script>
@@ -12,6 +17,10 @@
 
 
 <body>  
+
+	<header>
+		<a href='{{url_for('Home')}}'><h1>ThoughtPods</h1></a>
+	</header>
 
 <!-- GOOGLE PLUS SIGN IN BUTTON-->
 

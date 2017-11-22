@@ -116,8 +116,9 @@ form {
 	clear: both;
 }
 
-.podlist_item a, .new a {
+.podlist_item a, .user a, a.button, input.button, a.new {
 	color: purple;
+	text-transform: uppercase;
 }
 
 .podlist_item p {
@@ -132,15 +133,6 @@ form {
 	font-family: Lucida Console, Courier, monospace;
 	font-weight: bold;
 	margin: 0 .5em 0 0;
-}
-
-a.button, input.button {
-	text-transform: uppercase;
-	color: purple;
-}
-
-a.new {
-	color: purple;
 }
 
 .edit, .delete, {
