@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, redirect
+from flask import make_response, url_for, jsonify, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, ThoughtPod, PodItem, User
@@ -9,7 +10,6 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
-from flask import make_response
 import requests
 
 
@@ -97,7 +97,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps('User is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -137,13 +137,13 @@ def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps('User not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print 'In gdisconnect access token is %s' % access_token
     print 'User name is: '
     print login_session['username']
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']  # NOQA
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print 'result is '
@@ -157,7 +157,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return redirect(url_for('Home'))
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps('Failed to revoke token.', 400))
         response.headers['Content-Type'] = 'application/json'
         return "Logout attempt failed."
 
@@ -192,9 +192,11 @@ def podList(pod_id):
     owner = getUserInfo(thoughtpod.user_id)
     items = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id)
     if 'username' not in login_session or owner.id != login_session['user_id']:
-        return render_template('podlistpublic.html', thoughtpod=thoughtpod, items=items)
+        return render_template('podlistpublic.html',
+                               thoughtpod=thoughtpod, items=items)
     else:
-        return render_template('podlist.html', thoughtpod=thoughtpod, items=items)
+        return render_template('podlist.html',
+                               thoughtpod=thoughtpod, items=items)
 
 
 # Functionality to create a new ThoughtPod
@@ -203,7 +205,9 @@ def newThoughtPod():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newPod = ThoughtPod(pod_title=request.form['title'], description=request.form['description'], user_id=login_session['user_id'])
+        newPod = ThoughtPod(pod_title=request.form['title'],
+                            description=request.form['description'],
+                            user_id=login_session['user_id'])
         session.add(newPod)
         session.commit()
         return redirect(url_for('Home'))
@@ -221,9 +225,12 @@ def newPodListItem(pod_id):
         return render_template('notauthorized.html', pod_id=pod_id)
     if request.method == 'POST':
         newItem = PodItem(
-            title=request.form['title'], url=request.form['url'],
-            description=request.form['description'], time_investment=request.form['time_investment'],
-            difficulty_level=request.form['difficulty_level'], thought_pod_id=pod_id,
+            title=request.form['title'],
+            url=request.form['url'],
+            description=request.form['description'],
+            time_investment=request.form['time_investment'],
+            difficulty_level=request.form['difficulty_level'],
+            thought_pod_id=pod_id,
             user_id=currentPod.user_id)
         session.add(newItem)
         session.commit()
@@ -256,7 +263,9 @@ def editPodListItem(pod_id, item_id):
         return redirect(url_for('podList', pod_id=pod_id))
     else:
         return render_template(
-            'editpodlistitem.html', pod_id=pod_id, item_id=item_id, item=editedItem)
+            'editpodlistitem.html',
+            pod_id=pod_id, item_id=item_id,
+            item=editedItem)
 
 
 # Functionality to delete individual items from the ThoughtPod Lists
@@ -285,7 +294,7 @@ def thoughtPodJSON():
 @app.route('/pods/<int:pod_id>/JSON/')
 def thoughtPodListJSON(pod_id):
     thoughtpod = session.query(ThoughtPod).filter_by(id=pod_id).one()
-    allPodItems = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id).all()
+    allPodItems = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id).all()  # NOQA
     return jsonify(allPodItems=[i.serialize for i in allPodItems])
 
 
