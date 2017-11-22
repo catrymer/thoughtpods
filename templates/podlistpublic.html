@@ -2,7 +2,6 @@
 {% block content %}
 {% include "header.html" %}
 	<h2>{{thoughtpod.pod_title}}</h2>
-	<a class="new" href='{{url_for('newPodListItem', pod_id = thoughtpod.id) }}'>+ Add New Item</a>
 	{% for i in items %}
 		<div class="podlist_item">
 			<p>
@@ -11,8 +10,6 @@
 				Time Investment: {{i.time_investment}}<br>
 				Difficulty Level: {{i.difficulty_level}}
 			</p>
-			<div class="edit"><a class="button" href='{{url_for('editPodListItem', pod_id = thoughtpod.id, item_id = i.id) }}'>Edit</a></div>
-			<div class="delete"><a class="button" href='{{url_for('deletePodListItem', pod_id = thoughtpod.id, item_id = i.id ) }}'>Delete</a></div>
 		</div>
 	{% endfor %}
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, ThoughtPod, PodItem
+from database_setup import Base, ThoughtPod, PodItem, User
 from flask import session as login_session
 import random
 import string
@@ -117,6 +117,12 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # see if user exists, if it doesn't make a new one
+    user_id = getUserID(data["email"])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -161,12 +167,39 @@ def gdisconnect():
         return response
 
 
+# User helper functions
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
 # Returns a list of the items in a ThoughtPod List
 @app.route('/pods/<int:pod_id>/')
 def podList(pod_id):
     thoughtpod = session.query(ThoughtPod).filter_by(id=pod_id).one()
+    owner = getUserInfo(thoughtpod.user_id)
     items = session.query(PodItem).filter_by(thought_pod_id=thoughtpod.id)
-    return render_template('podlist.html', thoughtpod=thoughtpod, items=items)
+    if 'username' not in login_session or owner.id != login_session['user_id']:
+        return render_template('podlistpublic.html', thoughtpod=thoughtpod, items=items)
+    else:
+        return render_template('podlist.html', thoughtpod=thoughtpod, items=items)
 
 
 # Functionality to create a new ThoughtPod
@@ -175,7 +208,7 @@ def newThoughtPod():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newPod = ThoughtPod(pod_title=request.form['title'], description=request.form['description'])
+        newPod = ThoughtPod(pod_title=request.form['title'], description=request.form['description'], user_id=login_session['user_id'])
         session.add(newPod)
         session.commit()
         return redirect(url_for('Home'))
@@ -188,11 +221,15 @@ def newThoughtPod():
 def newPodListItem(pod_id):
     if 'username' not in login_session:
         return redirect('/login')
+    currentPod = session.query(ThoughtPod).filter_by(id=pod_id).one()
+    if login_session['user_id'] != currentPod.user_id:
+        return render_template('notauthorized.html', pod_id=pod_id)
     if request.method == 'POST':
         newItem = PodItem(
             title=request.form['title'], url=request.form['url'],
             description=request.form['description'], time_investment=request.form['time_investment'],
-            difficulty_level=request.form['difficulty_level'], thought_pod_id=pod_id)
+            difficulty_level=request.form['difficulty_level'], thought_pod_id=pod_id,
+            user_id=currentPod.user_id)
         session.add(newItem)
         session.commit()
         return redirect(url_for('podList', pod_id=pod_id))
@@ -206,6 +243,8 @@ def editPodListItem(pod_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(PodItem).filter_by(id=item_id).one()
+    if login_session['user_id'] != editedItem.user_id:
+        return render_template('notauthorized.html', pod_id=pod_id)
     if request.method == 'POST':
         if request.form['title']:
             editedItem.title = request.form['title']
@@ -231,6 +270,8 @@ def deletePodListItem(pod_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     itemToDelete = session.query(PodItem).filter_by(id=item_id).one()
+    if login_session['user_id'] != itemToDelete.user_id:
+        return render_template('notauthorized.html', pod_id=pod_id)
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()

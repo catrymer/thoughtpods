@@ -1,0 +1,6 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+	<h4>You are not authorized to make changes to this ThoughtPod.</h4>
+	<p><a class="button" href = '{{url_for('podList', pod_id = pod_id)}}'>Go Back </a></p>
+{% endblock %}
